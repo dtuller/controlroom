@@ -1,0 +1,45 @@
+<!-- Validation failure messages -->
+<% if @scene.errors.any? %>
+  <% @scene.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>
+    <a href="/scenes/<%= @scene.id %>" class="btn btn-default btn-med">
+      <i class="fa fa-chevron-left"></i>
+    </a>
+    Edit Scene
+  </h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/update_scene/<%= @scene.id %>" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for user_id -->
+      <input type="hidden" name="user_id" value="<%= @scene.user_id %>">
+
+      <!-- Label and input for name -->
+      <div class="form-group">
+        <label for="name" class="control-label">
+          Name
+        </label>
+
+        <input type="text" id="name" name="name" placeholder="Name" class="form-control" value="<%= @scene.name %>">
+      </div>
+
+      <button class="btn btn-warning">
+        Update Scene
+      </button>
+      or
+      <a href="/delete_scene/<%= @scene.id %>">Delete</a>
+    </form>
+  </div>
+</div>

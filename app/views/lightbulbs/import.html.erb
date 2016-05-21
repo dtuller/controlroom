@@ -1,0 +1,58 @@
+<div class="page-header">
+  <h1>
+    Scan for New Lightbulbs
+  </h1>
+</div>
+
+  <%  @hue_lightbulbs.each do |key, value| %>
+
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-body">
+            <form action="/create_lightbulb" method="post">
+              <!-- Hidden input for authenticity token to protect from forgery -->
+              <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+              <!-- Label and input for user_id -->
+              <input type="hidden" name="user_id" value="<%= current_user.id %>"> 
+
+              <!-- Label and input for control_id -->
+              <input type="hidden" name="control_id" value="<%= @hue_lightbulbs[key]["uniqueid"] %>">
+
+              <!-- Label and input for room -->
+              <div class="form-group">
+                <label for="room_id" class="control-label">
+                  Room
+                </label>
+
+                <%= select_tag(:room_id, options_from_collection_for_select(Room.all, :id, :name), :class => "form-control") %>
+              </div>
+
+              <!-- Label and input for name -->
+              <div class="form-group">
+                <label for="name" class="control-label">
+                  Name
+                </label>
+
+                <input type="text" id="name" name="name" placeholder="Name" class="form-control" value="<%= @hue_lightbulbs[key]["name"] %>">
+              </div>
+
+              <button class="btn btn-success btn-group-justified">
+                Import Light
+              </button>
+
+            </form>
+
+            <div class="panel-footer">
+              <a href="/hue_lightbulbs/<%= key %>/test" type="button" class="btn btn-success btn-group-justified">
+                Test
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <% end %>

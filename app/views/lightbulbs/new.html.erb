@@ -1,0 +1,64 @@
+<!-- Validation failure messages -->
+<% if @lightbulb.errors.any? %>
+  <% @lightbulb.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Add Lightbulb</h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/create_lightbulb" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for user_id -->
+      <div class="form-group">
+        <label for="user_id" class="control-label">
+          User
+        </label>
+
+        <input type="text" id="user_id" name="user_id" placeholder="User" class="form-control" value="<%= @lightbulb.user_id %>">
+      </div>
+
+      <!-- Label and input for state_id -->
+      <div class="form-group">
+        <label for="state_id" class="control-label">
+          State
+        </label>
+
+        <input type="text" id="state_id" name="state_id" placeholder="State" class="form-control" value="<%= @lightbulb.state_id %>">
+      </div>
+
+      <!-- Label and input for control_id -->
+      <div class="form-group">
+        <label for="control_id" class="control-label">
+          Control
+        </label>
+
+        <input type="text" id="control_id" name="control_id" placeholder="Control" class="form-control" value="<%= @lightbulb.control_id %>">
+      </div>
+
+      <!-- Label and input for name -->
+      <div class="form-group">
+        <label for="name" class="control-label">
+          Name
+        </label>
+
+        <input type="text" id="name" name="name" placeholder="Name" class="form-control" value="<%= @lightbulb.name %>">
+      </div>
+
+      <button class="btn btn-success">
+        Create Lightbulb
+      </button>
+      or
+      <a href="/lightbulbs">Cancel</a>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<!-- Validation failure messages -->
+<% if @lightbulb.errors.any? %>
+  <% @lightbulb.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Edit Lightbulb #<%= @lightbulb.id %></h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/update_lightbulb/<%= @lightbulb.id %>" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for user_id -->
+      <input type="hidden" name="user_id" value="<%= @lightbulb.user_id %>">
+
+      <!-- Label and input for room_id -->
+      <input type="hidden" name="room_id" value="<%= @lightbulb.room_id %>">
+
+      <!-- Label and input for state_id -->
+      <input type="hidden" name="state_id" value="<%= @lightbulb.state_id %>">
+
+      <!-- Label and input for control_id -->
+      <input type="hidden" name="control_id" value="<%= @lightbulb.control_id %>">
+
+      <!-- Label and input for name -->
+      <div class="form-group">
+        <label for="name" class="control-label">
+          Name
+        </label>
+
+        <input type="text" id="name" name="name" placeholder="Name" class="form-control" value="<%= @lightbulb.name %>">
+      </div>
+
+      <button class="btn btn-warning">
+        Update Lightbulb
+      </button>
+      or
+      <a href="/lightbulbs/<%= @lightbulb.id %>">Cancel</a>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<!-- Validation failure messages -->
+<% if @scene_lightbulb_state.errors.any? %>
+  <% @scene_lightbulb_state.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Edit Scene Lightbulb State #<%= @scene_lightbulb_state.id %></h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/update_scene_lightbulb_state/<%= @scene_lightbulb_state.id %>" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for scene_id -->
+      <div class="form-group">
+        <label for="scene_id" class="control-label">
+          Scene
+        </label>
+
+        <input type="text" id="scene_id" name="scene_id" placeholder="Scene" class="form-control" value="<%= @scene_lightbulb_state.scene_id %>">
+      </div>
+
+      <!-- Label and input for state_id -->
+      <div class="form-group">
+        <label for="state_id" class="control-label">
+          State
+        </label>
+
+        <input type="text" id="state_id" name="state_id" placeholder="State" class="form-control" value="<%= @scene_lightbulb_state.state_id %>">
+      </div>
+
+      <!-- Label and input for lightbulb_id -->
+      <div class="form-group">
+        <label for="lightbulb_id" class="control-label">
+          Lightbulb
+        </label>
+
+        <input type="text" id="lightbulb_id" name="lightbulb_id" placeholder="Lightbulb" class="form-control" value="<%= @scene_lightbulb_state.lightbulb_id %>">
+      </div>
+
+      <button class="btn btn-warning">
+        Update Scene Lightbulb State
+      </button>
+      or
+      <a href="/scene_lightbulb_states/<%= @scene_lightbulb_state.id %>">Cancel</a>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="page-header">
+  <h1>
+    Scenes
+    <a href="/scenes/new" class="btn btn-lg btn-success">New Scene</a>
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-striped table-hover">
+      <tr>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+
+      <% @scenes.each do |scene| %>
+      <tr>
+        <td><%= scene.name %></td>
+        <td>
+          <a href="/scenes/<%= scene.id %>" class="btn btn-primary">Show</a>
+          <a href="/scenes/<%= scene.id %>/edit" class="btn btn-warning">Edit</a>
+          <a href="/delete_scene/<%= scene.id %>" class="btn btn-danger" rel="nofollow">Delete</a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>

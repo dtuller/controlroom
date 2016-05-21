@@ -1,0 +1,28 @@
+<div class="page-header">
+  <h3>Room #<%= @room.id %></h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <dl class="dl-horizontal">
+      <dt>User</dt>
+      <dd><%= @room.user_id %></dd>
+
+      <dt>Name</dt>
+      <dd><%= @room.name %></dd>
+
+    </dl>
+
+    <div class="btn-group btn-group-justified">
+      <a href="/rooms" class="btn btn-primary">
+        Back
+      </a>
+      <a href="/rooms/<%= @room.id %>/edit" class="btn btn-warning">
+        Edit
+      </a>
+      <a href="/delete_room/<%= @room.id %>" class="btn btn-danger" rel="nofollow">
+        Delete
+      </a>
+    </div>
+  </div>
+</div>

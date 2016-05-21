@@ -1,0 +1,102 @@
+<!-- Validation failure messages -->
+<% if @state.errors.any? %>
+  <% @state.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Add State</h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/create_state" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for user_id -->
+      <input type="hidden" name="user_id" value="<%= current_user.id %> %>">
+
+      <!-- Label and input for effect -->
+      <div class="form-group">
+        <label for="effect" class="control-label">
+          Effect
+        </label>
+
+        <input type="text" id="effect" name="effect" placeholder="Effect" class="form-control" value="<%= @state.effect %>">
+      </div>
+
+      <!-- Label and input for alert -->
+      <div class="form-group">
+        <label for="alert" class="control-label">
+          Alert
+        </label>
+
+        <input type="text" id="alert" name="alert" placeholder="Alert" class="form-control" value="<%= @state.alert %>">
+      </div>
+
+      <!-- Label and input for blue -->
+      <div class="form-group">
+        <label for="blue" class="control-label">
+          Blue
+        </label>
+
+        <input type="text" id="blue" name="blue" placeholder="Blue" class="form-control" value="<%= @state.blue %>">
+      </div>
+
+      <!-- Label and input for green -->
+      <div class="form-group">
+        <label for="green" class="control-label">
+          Green
+        </label>
+
+        <input type="text" id="green" name="green" placeholder="Green" class="form-control" value="<%= @state.green %>">
+      </div>
+
+      <!-- Label and input for red -->
+      <div class="form-group">
+        <label for="red" class="control-label">
+          Red
+        </label>
+
+        <input type="text" id="red" name="red" placeholder="Red" class="form-control" value="<%= @state.red %>">
+      </div>
+
+      <!-- Label and input for brightness -->
+      <div class="form-group">
+        <label for="brightness" class="control-label">
+          Brightness
+        </label>
+
+        <input type="text" id="brightness" name="brightness" placeholder="Brightness" class="form-control" value="<%= @state.brightness %>">
+      </div>
+
+      <!-- Label and input for on -->
+      <div class="checkbox">
+        <label for="on">
+          <input type="checkbox" id="on" name="on" value="1" <%= "checked" if @state.on %>>
+          On
+        </label>
+      </div>
+
+      <!-- Label and input for name -->
+      <div class="form-group">
+        <label for="name" class="control-label">
+          Name
+        </label>
+
+        <input type="text" id="name" name="name" placeholder="Name" class="form-control" value="<%= @state.name %>">
+      </div>
+
+      <button class="btn btn-success">
+        Create State
+      </button>
+      or
+      <a href="/states">Cancel</a>
+    </form>
+  </div>
+</div>
