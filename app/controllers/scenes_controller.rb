@@ -5,6 +5,8 @@ class ScenesController < ApplicationController
 
   def show
     @scene = Scene.find(params[:id])
+    @rooms = Room.all
+    @lightbulbs = Lightbulb.all
   end
 
   def new
@@ -47,4 +49,5 @@ class ScenesController < ApplicationController
 
     redirect_to "/scenes", :notice => "Scene deleted."
   end
+
 end

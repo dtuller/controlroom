@@ -14,5 +14,7 @@ class Lightbulb < ActiveRecord::Base
   # room_id: no rules
 
   belongs_to :user
+  belongs_to :room
+  belongs_to :state
 
 end

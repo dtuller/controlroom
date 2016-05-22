@@ -9,7 +9,12 @@
 <% end %>
 
 <div class="page-header">
-  <h3>Edit Lightbulb #<%= @lightbulb.id %></h3>
+  <h3>
+    <a href="/lightbulbs/" class="btn btn-default btn-med">
+      <i class="fa fa-chevron-left"></i>
+    </a>
+    Edit Lightbulb
+  </h3>
 </div>
 
 <div class="row">
@@ -43,7 +48,7 @@
         Update Lightbulb
       </button>
       or
-      <a href="/lightbulbs/<%= @lightbulb.id %>">Cancel</a>
+      <a href="/delete_lightbulb/<%= @lightbulb.id %>" rel="nofollow">Delete</a>
     </form>
   </div>
 </div>

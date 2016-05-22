@@ -5,4 +5,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :lightbulbs
+  has_many :scenes
+  has_many :states
+  has_many :rooms
+
 end

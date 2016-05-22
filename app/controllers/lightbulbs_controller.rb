@@ -80,4 +80,24 @@ class LightbulbsController < ApplicationController
     redirect_to :back
   end
 
+  def turn_on_lightbulb
+    uri = URI.parse("http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/" + find_id(params[:control_id]) + "/state")
+    http = Net::HTTP.new(uri.host)
+    request = Net::HTTP::Put.new(uri.request_uri)
+    request.body = "{\"on\":true}"
+    http.request(request)
+
+    redirect_to("/")
+  end
+
+  def turn_off_lightbulb
+    uri = URI.parse("http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/" + find_id(params[:control_id]) + "/state")
+    http = Net::HTTP.new(uri.host)
+    request = Net::HTTP::Put.new(uri.request_uri)
+    request.body = "{\"on\":false}"
+    http.request(request)
+
+    redirect_to :back, :notice => "Lightbulb turned off."
+  end
+
 end

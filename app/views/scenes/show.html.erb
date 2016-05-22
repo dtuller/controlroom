@@ -6,3 +6,79 @@
     <a href="/scenes/<%= @scene.id %>/edit"><%= @scene.name %></a>
   </h3>
 </div>
+
+<div class="row row-horizon">
+  <%  @rooms.each do |room| %>
+
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><%= room.name %></h3>
+
+        </div>
+
+        <div class="panel-body">
+          <% room.lightbulbs.each do |lightbulb| %>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title pull-left"><a href="/lightbulbs/<%= lightbulb.id %>/edit"><%= lightbulb.name %> <%= find_id(lightbulb.control_id) %></a></h3>
+
+              <a href="/lightbulbs/<%= lightbulb.control_id %>/turn_off">Off</a>
+                <!-- <button class="btn btn-danger pull-right">Off</button> -->
+
+              <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+
+            </div>
+          </div>
+
+          <% end %>
+
+        </div>
+
+        <!-- <ul class="list-group">
+          <% room.lightbulbs.each do |lightbulb| %>
+          <li class="list-group-item"><%= lightbulb.name %></li>
+          <% end %>
+        </ul> -->
+
+      </div>
+    </div>
+
+  <% end %>
+
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Unassigned</h3>
+      </div>
+      <div class="panel-body">
+
+
+        <% @lightbulbs.each do |lightbulb| %>
+          <% if lightbulb.room_id == nil %>
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title"><%= lightbulb.name %></h3>
+              </div>
+              <div class="panel-body">
+
+              </div>
+              <div class="panel-footer">
+
+              </div>
+            </div>
+
+          <% end %>
+        <% end %>
+
+      </div>
+      <div class="panel-footer">
+
+      </div>
+    </div>
+  </div>
+</div>

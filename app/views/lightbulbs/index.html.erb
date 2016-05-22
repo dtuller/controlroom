@@ -19,7 +19,30 @@
 
       <% @lightbulbs.each do |lightbulb| %>
       <tr>
-        <td><%= lightbulb.room_id %></td>
+        <td>
+
+          <form action="/update_lightbulb/<%= lightbulb.id %>" method="post">
+
+            <!-- Hidden input for authenticity token to protect from forgery -->
+            <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+            <!-- Label and input for user_id -->
+            <input type="hidden" name="user_id" value="<%= lightbulb.user_id %>">
+
+            <!-- Label and input for state_id -->
+            <input type="hidden" name="state_id" value="<%= lightbulb.state_id %>">
+
+            <!-- Label and input for control_id -->
+            <input type="hidden" name="control_id" value="<%= lightbulb.control_id %>">
+
+            <!-- Label and input for name -->
+            <input type="hidden" name="name" value="<%= lightbulb.name %>">
+
+            <%= select_tag(:room_id, options_from_collection_for_select(Room.all, :id, :name, lightbulb.room_id), :class => "form-control", :onchange => "this.form.submit();", :include_blank => true) %>
+
+          </form>
+
+        </td>
         <td><a href="/lightbulbs/<%= lightbulb.id %>/edit"><%= lightbulb.name %></a></td>
         <td><%= lightbulb.state_id %></td>
         <td>TBD</td>

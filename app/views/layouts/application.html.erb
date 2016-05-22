@@ -1,3 +1,5 @@
+<% @scenes = get_scenes %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +9,11 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/darkly/bootstrap.min.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
+  <link rel="stylesheet" href="/bootstrap-horizon.css">
+  <link href="bootstrap-switch.css" rel="stylesheet">
+  <script src="jquery.js"></script>
+  <script src="bootstrap-switch.js"></script>
+  
   <style>
     /* Only necessary if you are using navbar-fixed-top */
     body {
@@ -40,10 +47,21 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Scenes <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <% @scenes.each do |scene| %>
+                <li><a href="/scenes/<%= scene.id %>"><%= scene.name %></a></li>
+              <% end %>
+            </ul>
+          </div>
+
           <li><a href="/lightbulbs">Lightbulbs</a></li>
           <li><a href="/states">States</a></li>
           <li><a href="/scene_lightbulb_states">Scene Lightbulb States</a></li>
-          <li><a href="/scenes">Scenes</a></li>
           <li><a href="/rooms">Rooms</a></li>
           <li><a href="/rails/info">Sitemap</a></li>
         </ul>
@@ -51,7 +69,11 @@
         <% if current_user != nil %>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/users/edit"><%= current_user.email %></a></li>
-            <li><a href="/users/sign_out" data-method="delete" rel="nofollow">Sign out</a></li>
+            <li>
+              <a href="/users/sign_out" data-method="delete" rel="nofollow">
+                <i class="fa fa-sign-out"></i>
+              </a>
+            </li>
           </ul>
         <% end %>
       </div><!-- /.navbar-collapse -->

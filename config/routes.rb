@@ -18,7 +18,12 @@ Rails.application.routes.draw do
   get "/delete_lightbulb/:id", :controller => "lightbulbs", :action => "destroy"
 
   get "/import_lightbulbs", :controller => "lightbulbs", :action => "import"
+
   get "/hue_lightbulbs/:id/test", :controller => "lightbulbs", :action => "test"
+
+  get "/lightbulbs/:control_id/turn_on", :controller => "lightbulbs", :action => "turn_on_lightbulb"
+  get "/lightbulbs/:control_id/turn_off", :controller => "lightbulbs", :action => "turn_off_lightbulb"
+
 #------------------------------
 
   # Routes for the State resource:
