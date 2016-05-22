@@ -10,20 +10,13 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="/bootstrap-horizon.css">
-  <link href="bootstrap-switch.css" rel="stylesheet">
-  <script src="jquery.js"></script>
-  <script src="bootstrap-switch.js"></script>
-  
+
   <style>
     /* Only necessary if you are using navbar-fixed-top */
     body {
       padding-top: 60px;
     }
   </style>
-
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
 
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
@@ -58,6 +51,19 @@
               <% end %>
             </ul>
           </div>
+
+          <div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Action <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="#">Action</a></li>
+    <li><a href="#">Another action</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="#">Separated link</a></li>
+  </ul>
+</div>
 
           <li><a href="/lightbulbs">Lightbulbs</a></li>
           <li><a href="/states">States</a></li>
