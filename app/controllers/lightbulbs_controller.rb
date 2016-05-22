@@ -87,7 +87,7 @@ class LightbulbsController < ApplicationController
     request.body = "{\"on\":true}"
     http.request(request)
 
-    redirect_to("/")
+    redirect_to :back
   end
 
   def turn_off_lightbulb
@@ -97,7 +97,7 @@ class LightbulbsController < ApplicationController
     request.body = "{\"on\":false}"
     http.request(request)
 
-    redirect_to :back, :notice => "Lightbulb turned off."
+    redirect_to :back
   end
 
 end

@@ -7,6 +7,10 @@
   </h3>
 </div>
 
+<p>
+              <input id="switch-state" type="checkbox" checked>
+            </p>
+
 <div class="row row-horizon">
   <%  @rooms.each do |room| %>
 
@@ -24,8 +28,11 @@
             <div class="panel-heading">
               <h3 class="panel-title pull-left"><a href="/lightbulbs/<%= lightbulb.id %>/edit"><%= lightbulb.name %> <%= find_id(lightbulb.control_id) %></a></h3>
 
+              <span class="pull-right">
               <a href="/lightbulbs/<%= lightbulb.control_id %>/turn_off">Off</a>
+              <a href="/lightbulbs/<%= lightbulb.control_id %>/turn_on">On</a>
                 <!-- <button class="btn btn-danger pull-right">Off</button> -->
+              </span>
 
               <div class="clearfix"></div>
             </div>

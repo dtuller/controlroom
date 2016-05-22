@@ -13,3 +13,14 @@
  *= require_tree .
  *= require_self
  */
+
+
+/*
+ * for bootstrap3
+ *= require bootstrap3-switch
+ *
+ * or for bootstrap2
+ *= require bootstrap2-switch
+ */
+
+ *= require bootstrap-switch
