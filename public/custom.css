@@ -1,0 +1,24 @@
+.panel-heading h3 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: normal;
+    width: 65%;
+    vertical-align: middle;
+}
+
+.panel-heading h4 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: normal;
+    width: 35%;
+}
+
+h4.panel-title {
+    font-size: 14px
+}
+
+.panel-footer select {
+  /*padding:4px;*/
+}

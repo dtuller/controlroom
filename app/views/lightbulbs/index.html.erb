@@ -17,7 +17,7 @@
         <th>Actions</th>
       </tr>
 
-      <% @lightbulbs.each do |lightbulb| %>
+      <% @lightbulbs.where("user_id = ?", current_user.id).each do |lightbulb| %>
       <tr>
         <td>
 
@@ -45,7 +45,7 @@
         </td>
         <td><a href="/lightbulbs/<%= lightbulb.id %>/edit"><%= lightbulb.name %></a></td>
         <td><%= lightbulb.state_id %></td>
-        <td>TBD</td>
+        <td><%= lightbulb.room_id %></td>
         <td>TBD</td>
         <td>
           <a href="/delete_lightbulb/<%= lightbulb.id %>" class="btn btn-danger" rel="nofollow">Delete</a>

@@ -17,11 +17,16 @@ class RoomsController < ApplicationController
     @room.name = params[:name]
 
     if @room.save
-      redirect_to "/rooms", :notice => "Room created successfully."
+      redirect_to :back, :notice => "Room created successfully."
     else
-      render 'new'
+      @scene = Scene.find(6)
+      @rooms = Room.order("lower(name) DESC").all
+      @lightbulbs = Lightbulb.all
+      redirect_to :back, :alert => "Room already exists"
     end
   end
+
+
 
   def edit
     @room = Room.find(params[:id])
@@ -34,7 +39,7 @@ class RoomsController < ApplicationController
     @room.name = params[:name]
 
     if @room.save
-      redirect_to "/rooms", :notice => "Room updated successfully."
+      redirect_to "", :notice => "Room updated successfully."
     else
       render 'edit'
     end
@@ -43,8 +48,13 @@ class RoomsController < ApplicationController
   def destroy
     @room = Room.find(params[:id])
 
+    Lightbulb.where(:room_id => params[:id]).find_each do |lightbulb|
+      lightbulb.room_id = nil
+      lightbulb.save
+    end
+
     @room.destroy
 
-    redirect_to "/rooms", :notice => "Room deleted."
+    redirect_to :back, :notice => "Room deleted."
   end
 end

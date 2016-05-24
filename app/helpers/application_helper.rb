@@ -1,7 +1,9 @@
 module ApplicationHelper
 
   def get_scenes
-    @scenes = Scene.all
+    if current_user.present?
+      @scenes = Scene.where("user_id = ?", current_user.id).all
+    end
   end
 
 end

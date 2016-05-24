@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  root "scenes#index"
+  root "scenes#show"
 
   # Routes for the Lightbulb resource:
   # CREATE
@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
   get "/import_lightbulbs", :controller => "lightbulbs", :action => "import"
 
-  get "/hue_lightbulbs/:id/test", :controller => "lightbulbs", :action => "test"
+  get "/lightbulbs/:control_id/test", :controller => "lightbulbs", :action => "test"
 
   get "/lightbulbs/:control_id/turn_on", :controller => "lightbulbs", :action => "turn_on_lightbulb"
   get "/lightbulbs/:control_id/turn_off", :controller => "lightbulbs", :action => "turn_off_lightbulb"
@@ -92,7 +92,15 @@ Rails.application.routes.draw do
 
   # DELETE
   get "/delete_room/:id", :controller => "rooms", :action => "destroy"
-  #------------------------------
+
+  get "/turn_on_room/:room_id", :controller => "lightbulbs", :action => "turn_on_room"
+  get "/turn_off_room/:room_id", :controller => "lightbulbs", :action => "turn_off_room"
+  get "/test_room/:room_id", :controller => "lightbulbs", :action => "test_room"
+  get "/turn_on_all", :controller => "lightbulbs", :action => "turn_on_all"
+  get "/turn_off_all", :controller => "lightbulbs", :action => "turn_off_all"
+  get "/test_all", :controller => "lightbulbs", :action => "test_all"
+
+    #------------------------------
 
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.

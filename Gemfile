@@ -2,6 +2,9 @@ source 'https://rubygems.org'
 
 gem "starter_generators", :git => "http://github.com/raghubetina/starter_generators.git"
 gem 'devise'
+gem 'bootstrap_colorpicker_rails'
+gem "bootstrap-switch-rails"
+
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'

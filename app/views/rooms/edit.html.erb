@@ -9,7 +9,7 @@
 <% end %>
 
 <div class="page-header">
-  <h3>Edit Room #<%= @room.id %></h3>
+  <h3>Edit Room</h3>
 </div>
 
 <div class="row">
@@ -19,13 +19,7 @@
       <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
 
       <!-- Label and input for user_id -->
-      <div class="form-group">
-        <label for="user_id" class="control-label">
-          User
-        </label>
-
-        <input type="text" id="user_id" name="user_id" placeholder="User" class="form-control" value="<%= @room.user_id %>">
-      </div>
+      <input type="hidden" name="user_id" value="<%= @room.user_id %>">
 
       <!-- Label and input for name -->
       <div class="form-group">
@@ -40,7 +34,7 @@
         Update Room
       </button>
       or
-      <a href="/rooms/<%= @room.id %>">Cancel</a>
+      <a href="/">Cancel</a>
     </form>
   </div>
 </div>

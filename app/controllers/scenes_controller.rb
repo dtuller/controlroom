@@ -4,9 +4,13 @@ class ScenesController < ApplicationController
   end
 
   def show
-    @scene = Scene.find(params[:id])
-    @rooms = Room.all
-    @lightbulbs = Lightbulb.all
+    if params[:id].present?
+      @scene = Scene.find(params[:id])
+    end
+    @scenes = Scene.where("user_id = ?", current_user.id).all
+    @rooms = Room.where("user_id = ?", current_user.id).order("lower(name) ASC").all
+    @lightbulbs = Lightbulb.where("user_id = ?", current_user.id).order("lower(name) ASC")
+
   end
 
   def new

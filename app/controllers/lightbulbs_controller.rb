@@ -43,7 +43,7 @@ class LightbulbsController < ApplicationController
     @lightbulb.name = params[:name]
 
     if @lightbulb.save
-      redirect_to "/lightbulbs", :notice => "Lightbulb updated successfully."
+      redirect_to "", :notice => "Lightbulb updated successfully."
     else
       render 'edit'
     end
@@ -54,24 +54,55 @@ class LightbulbsController < ApplicationController
 
     @lightbulb.destroy
 
-    redirect_to "/lightbulbs", :notice => "Lightbulb deleted."
+    redirect_to :back, :alert => "Lightbulb deleted."
   end
 
   def import
 
-    @lightbulb = Lightbulb.all
+    @lightbulbs = Lightbulb.where("user_id = ?", current_user.id).all
+    countbefore = @lightbulbs.count
     url = "http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights"
     @hue_lightbulbs = JSON.parse(open(url).read)
 
-    @lightbulb.each do |lightbulb|
+    @lightbulbs.each do |lightbulb|
       @hue_lightbulbs.delete_if {|key, value| value["uniqueid"] == lightbulb.control_id }
     end
+
+      @hue_lightbulbs.each do |key, value|
+      @new_lightbulb = Lightbulb.new
+      @new_lightbulb.user_id = current_user.id
+      @new_lightbulb.control_id = @hue_lightbulbs[key]["uniqueid"]
+      @new_lightbulb.name = @hue_lightbulbs[key]["name"]
+      @new_lightbulb.save
+    end
+
+    @lightbulbsafter = Lightbulb.where("user_id = ?", current_user.id).all
+    count = @lightbulbsafter.count - countbefore
+
+    if count == 0
+      redirect_to :back, :alert => "No new lightbulbs detected"
+    else
+      redirect_to :back, :notice => count.to_s + " lightbulbs imported."
+    end
+
+    # if @lightbulb.save
+    #   redirect_to "/lightbulbs", :notice => "Lightbulb created successfully."
+    # else
+    #   render 'new'
+    # end
+
 
   end
 
   def test
 
-    uri = URI.parse("http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/" + params[:id] + "/state")
+
+    if params[:control_id].length < 3
+      id = params[:control_id]
+    else
+      id = find_id(params[:control_id])
+    end
+    uri = URI.parse("http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/" + id + "/state")
     http = Net::HTTP.new(uri.host)
     request = Net::HTTP::Put.new(uri.request_uri)
     request.body = "{\"alert\":\"lselect\"}"
@@ -99,5 +130,98 @@ class LightbulbsController < ApplicationController
 
     redirect_to :back
   end
+
+  def turn_on_room
+
+  roomlights = Lightbulb.where("room_id = ?", params[:room_id]).all
+
+
+  roomlights.each do |roomlight|
+    uri = URI.parse("http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/" + find_id(roomlight.control_id) + "/state")
+    http = Net::HTTP.new(uri.host)
+    request = Net::HTTP::Put.new(uri.request_uri)
+    request.body = "{\"on\":true}"
+    http.request(request)
+  end
+
+  redirect_to :back
+end
+
+def turn_off_room
+
+  roomlights = Lightbulb.where("room_id = ?", params[:room_id]).all
+
+
+  roomlights.each do |roomlight|
+    uri = URI.parse("http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/" + find_id(roomlight.control_id) + "/state")
+    http = Net::HTTP.new(uri.host)
+    request = Net::HTTP::Put.new(uri.request_uri)
+    request.body = "{\"on\":false}"
+    http.request(request)
+  end
+
+  redirect_to :back
+end
+
+def test_room
+
+  roomlights = Lightbulb.where("room_id = ?", params[:room_id]).all
+
+
+  roomlights.each do |roomlight|
+    uri = URI.parse("http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/" + find_id(roomlight.control_id) + "/state")
+    http = Net::HTTP.new(uri.host)
+    request = Net::HTTP::Put.new(uri.request_uri)
+    request.body = "{\"alert\":\"lselect\"}"
+    http.request(request)
+  end
+
+  redirect_to :back
+end
+
+def turn_on_all
+
+  all_lights = Lightbulb.where.not(room_id: nil).all
+
+  all_lights.each do |all_light|
+    uri = URI.parse("http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/" + find_id(all_light.control_id) + "/state")
+    http = Net::HTTP.new(uri.host)
+    request = Net::HTTP::Put.new(uri.request_uri)
+    request.body = "{\"on\":true}"
+    http.request(request)
+  end
+
+  redirect_to :back
+end
+
+def turn_off_all
+
+  all_lights = Lightbulb.where.not(room_id: nil).all
+
+  all_lights.each do |all_light|
+    uri = URI.parse("http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/" + find_id(all_light.control_id) + "/state")
+    http = Net::HTTP.new(uri.host)
+    request = Net::HTTP::Put.new(uri.request_uri)
+    request.body = "{\"on\":false}"
+    http.request(request)
+  end
+
+  redirect_to :back
+end
+
+def test_all
+
+  all_lights = Lightbulb.where.not(room_id: nil).all
+
+  all_lights.each do |all_light|
+    uri = URI.parse("http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/" + find_id(all_light.control_id) + "/state")
+    http = Net::HTTP.new(uri.host)
+    request = Net::HTTP::Put.new(uri.request_uri)
+    request.body = "{\"alert\":\"lselect\"}"
+    http.request(request)
+  end
+
+  redirect_to :back
+end
 
 end
