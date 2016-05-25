@@ -57,6 +57,17 @@ class LightbulbsController < ApplicationController
     redirect_to :back, :alert => "Lightbulb deleted."
   end
 
+  def delete_unassigned
+    @lightbulbs = Lightbulb.where("user_id = ?", current_user.id).all
+    @lightbulbstodestroy = @lightbulbs.where("room_id" => nil ).all
+
+    @lightbulbstodestroy.each do |lightbulb|
+      lightbulb.destroy
+    end
+
+    redirect_to :back, :alert => "Lightbulb deleted."
+  end
+
   def import
 
     @lightbulbs = Lightbulb.where("user_id = ?", current_user.id).all

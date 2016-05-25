@@ -99,6 +99,8 @@ Rails.application.routes.draw do
   get "/turn_on_all", :controller => "lightbulbs", :action => "turn_on_all"
   get "/turn_off_all", :controller => "lightbulbs", :action => "turn_off_all"
   get "/test_all", :controller => "lightbulbs", :action => "test_all"
+  get "/delete_unassigned", :controller => "lightbulbs", :action => "delete_unassigned"
+
 
     #------------------------------
 

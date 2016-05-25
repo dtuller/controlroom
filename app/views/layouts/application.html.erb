@@ -10,13 +10,20 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="/bootstrap-horizon.css">
+  <link rel="stylesheet" href="/custom.css">
+
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 
   <style>
     /* Only necessary if you are using navbar-fixed-top */
     body {
-      padding-top: 60px;
+      padding-top: 80px;
     }
   </style>
+
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
 
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
@@ -28,61 +35,44 @@
     <div class="container">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a href="/" class="navbar-brand">Controlroom</a>
+        <% if current_user.present? %>
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        <% end %>
+        <a href="/" class="navbar-brand">Room Controller</a>
       </div>
 
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
+      <% if current_user.present? %>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Scenes <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
 
-          <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Scenes <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-              <% @scenes.each do |scene| %>
-                <li><a href="/scenes/<%= scene.id %>"><%= scene.name %></a></li>
-              <% end %>
-            </ul>
-          </div>
+                <% @scenes.each do |scene| %>
+                  <li><a href="/scenes/<%= scene.id %>"><%= scene.name %></a></li>
+                <% end %></a></li>
+                <% if @scenes.count > 0 %>
+                  <li class="divider"></li>
+                <% end %>
+                <li><a href="/scenes/new">New scene</a></li>
+              </ul>
+            </li>
+            <li><a href="/import_lightbulbs">Scan for Lightbulbs</a></li>
+            <li><a href="/states">States</a></li>
+            <li><a href="/scene_lightbulb_states">Scene Lightbulb States</a></li>
+          </ul>
 
-          <div class="btn-group">
-  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Action <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu">
-    <li><a href="#">Action</a></li>
-    <li><a href="#">Another action</a></li>
-    <li><a href="#">Something else here</a></li>
-    <li role="separator" class="divider"></li>
-    <li><a href="#">Separated link</a></li>
-  </ul>
-</div>
-
-          <li><a href="/lightbulbs">Lightbulbs</a></li>
-          <li><a href="/states">States</a></li>
-          <li><a href="/scene_lightbulb_states">Scene Lightbulb States</a></li>
-          <li><a href="/rooms">Rooms</a></li>
-          <li><a href="/rails/info">Sitemap</a></li>
-        </ul>
-
-        <% if current_user != nil %>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/users/edit"><%= current_user.email %></a></li>
-            <li>
-              <a href="/users/sign_out" data-method="delete" rel="nofollow">
-                <i class="fa fa-sign-out"></i>
-              </a>
-            </li>
+            <li><a href="/users/sign_out" data-method="delete" rel="nofollow"><i class="fa fa-sign-out"></i></a></li>
           </ul>
-        <% end %>
-      </div><!-- /.navbar-collapse -->
+        </div><!-- /.navbar-collapse -->
+      <% end %>
     </div>
   </nav>
 

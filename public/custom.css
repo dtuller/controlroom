@@ -7,18 +7,10 @@
     vertical-align: middle;
 }
 
-.panel-heading h4 {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: normal;
-    width: 35%;
-}
-
-h4.panel-title {
-    font-size: 14px
-}
-
 .panel-footer select {
   /*padding:4px;*/
 }
+
+@media (min-width:768px){.container{width:750px}}
+@media (min-width:992px){.container{width:970px}}
+@media (min-width:1560px){.container{width:1530px}}

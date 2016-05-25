@@ -40,7 +40,7 @@
 
       <!-- Label and input for room_id -->
       <div class="form-group">
-        <%= select_tag(:room_id, options_from_collection_for_select(Room.where("user_id = ?", current_user.id).all, :id, :name, @lightbulb.room_id), :class => "form-control ", :include_blank => true, :size => 1) %>        
+        <%= select_tag(:room_id, options_from_collection_for_select(Room.where("user_id = ?", current_user.id).all, :id, :name, @lightbulb.room_id), :class => "form-control ", :include_blank => true, :size => 1) %>
       </div>
 
       <button class="btn btn-warning">
