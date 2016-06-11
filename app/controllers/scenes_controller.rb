@@ -51,7 +51,7 @@ class ScenesController < ApplicationController
 
     @scene.destroy
 
-    redirect_to "/scenes", :notice => "Scene deleted."
+    redirect_to "/", :notice => "Scene deleted."
   end
 
 end

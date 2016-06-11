@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  root "scenes#show"
+    root "scenes#show"
 
   # Routes for the Lightbulb resource:
   # CREATE

@@ -1,12 +1,7 @@
-<link href="http://seiyria.com/bootstrap-slider/css/bootstrap-slider.css" rel="stylesheet">
-<script type='text/javascript' src="http://seiyria.com/bootstrap-slider/js/bootstrap-slider.js"></script>
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-
-<style>
-.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-color: #272727 }
-.toggle.ios .toggle-handle { width: 30px }
-.slider-handle { background: #375a7f; }
-</style>
+<link href="/vendor/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css" rel="stylesheet">
+<script src="/vendor/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
+<script src="/vendor/bootstrap-toggle/js/bootstrap-toggle.js"></script>
+<script src="/vendor/jscolor/jscolor2.js"></script>
 
 <% if @room != nil %>
 <% if @room.errors.any? %>
@@ -19,523 +14,564 @@
 <% end %>
 <% end %>
 
-<span id="cp2" class="input-group colorpicker-component pull-right">
-<span class="input-group-addon" style="padding:6px; width: 16px; height: 17px; border: 1px; border-color: black"><i></i></span>
-</span><script>
-$(function() {
-$('#cp2').colorpicker({format:'hex'}).on('changeColor', function(e) {
-
-  $('body')[0].style.backgroundColor = e.color.toHex();
-
-});
-});
-
-</script>
-
-<div id="cp3" class="input-group colorpicker-component">
-    <input type="text" value="#00AABB" class="form-control" />
-    <span class="input-group-addon"><i></i></span>
-</div>
-<script>
-    $(function() {
-      $('#cp3').colorpicker({format:'hex'}).on('changeColor', function(e) {
-
-        $('body')[0].style.backgroundColor = e.color.toHex();
-
-      });
-    })
-</script>
-
-
-
+<!-- RoomControllerBox -->
 <div class="page-header">
-
   <div class="row">
-
     <div class="col-md-5">
       <div class="panel panel-default">
         <div class="panel-heading">
 
-          <!-- Split button -->
+          <!-- Scene selection button -->
           <div class="btn-group pull-left">
-            <button type="button" class="btn btn-primary">
-              <% if @scene.present? %>
-              <%= @scene.name %>
-              <% else %>
-              Room Controller
-              <% end %>
-            </button>
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <span class="caret"></span>
-              <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-              <% if @scene.present? %>
-              <li><a href="/">Room Controller</a></li>
-              <li role="separator" class="divider"></li>
-              <% @scenes.each do |scene| %>
-              <li><a href="/scenes/<%= scene.id %>"><%= scene.name %></a></li>
-              <% end %>
-              <li role="separator" class="divider"></li>
-              <li><a href="/scenes/new">New Scene</a></li>
-              <% else %>
-              <% @scenes.each do |scene| %>
-              <li><a href="/scenes/<%= scene.id %>"><%= scene.name %></a></li>
-              <% end %>
-              <li role="separator" class="divider"></li>
-              <li><a href="/scenes/new">New Scene</a></li>
-              <% end %>
-            </ul>
-          </div>
-
-
-          <div class="pull-right">
-            <input id="all" type="checkbox" data-toggle="toggle" data-style="ios" data-size="mini" data-width="70"
-            <% if @lightbulbs.where.not("room_id" => nil).all? {|lightbulb| JSON.parse(open('http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + find_id(lightbulb.control_id)).read)["state"]["on"]} %>
-            checked
+            <% if @scene.present? %>
+              <a class="btn btn-primary" href="/scenes/<%= @scene.id %>/edit"> <%= @scene.name %></a>
+              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="/">Room Controller</a></li>
+                <li role="separator" class="divider"></li>
+                <% @scenes.each do |scene| %>
+                <li><a href="/scenes/<%= scene.id %>"><%= scene.name %></a></li>
+                <% end %>
+                <li role="separator" class="divider"></li>
+                <li><a href="/scenes/new">New Scene</a></li>
+              </ul>
+            <% else %>
+              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Room Controller &nbsp&nbsp<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <ul class="dropdown-menu">
+                <% if @scenes.present? %>
+                  <% @scenes.each do |scene| %>
+                    <li><a href="/scenes/<%= scene.id %>"><%= scene.name %></a></li>
+                  <% end %>
+                <li role="separator" class="divider"></li>
+                <% end %>
+                <li><a href="/scenes/new">New Scene</a></li>
+              </ul>
             <% end %>
-            >
-            <script>
-            $(function() {
-              $('#all').change(function() {
+          </div>
 
-                function put(control_id, state, bri) {
-                  $.ajax({
-                    url: 'http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + control_id + '/state',
-                    type: 'PUT',
-                    dataType: 'json',
-                    data: '{"on": ' + state +',"bri": ' + bri + '}' // or $('#myform').serializeArray()
-                  });
+          <!-- RoomControllerBox button -->
+          <% if @rooms.count > 0 && @lightbulbs.count(:room_id) > 0 %>
+            <div class="pull-right">
+              <input id="all" type="checkbox" data-toggle="toggle" data-style="ios" data-size="mini" data-width="70"
+              <% if @lightbulbs.where.not("room_id" => nil).all? {|lightbulb| JSON.parse(open('http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + find_id(lightbulb.control_id)).read)["state"]["on"]} %>
+              checked
+              <% end %>
+              >
+              <!-- RoomControllerBox button script -->
+              <script>
+                $(function() {
+                  $('#all').change(function() {
+
+                    function put(control_id, state, bri) {
+                      $.ajax({
+                        url: 'http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + control_id + '/state',
+                        type: 'PUT',
+                        dataType: 'json',
+                        data: '{"on": ' + state +',"bri": ' + bri + '}'
+                      });
+                    }
+
+                    <% @lightbulbs.where.not("room_id" => nil).each do |lightbulb| %>
+                      put(<%= find_id(lightbulb.control_id) %>, $(this).prop('checked'), r<%= lightbulb.id %>.getValue());
+                    <% end %>
+
+                    <% @rooms.each do |room| %>
+                      if ($(this).prop('checked')) {
+                        $('#room' + <%= room.id %>).bootstrapToggle('on')
+                      }
+                      else {
+                        $('#room' + <%= room.id %>).bootstrapToggle('off')
+                      }
+                    <% end %>
+
+                    if ($(this).prop('checked')) {
+                      $('.allstyle').css({"background-color":"rgba(204,119,51," + $('#allfooter').slider('getValue')/254 + ")", "transition":"background-color 0.5s ease"});
+                    } else {
+                      $('.allstyle').css({"background-color":"", "transition":"background-color 0.5s ease"});
+                    }
+
+                  })
+                })
+              </script>
+            </div>
+          <% end %>
+
+            <div class="clearfix"></div>
+
+          <% if @rooms.count > 0 && @lightbulbs.count(:room_id) > 0 %>
+            <div style="padding-top:6px">
+
+              <!-- RoomControllerBox color -->
+              <button
+                class="jscolor {valueElement:null,value:'cc7733', width: 150, height:30, padding:0, shadow:false, borderWidth:0, onFineChange:'allcolorupdate(this)', borderColor:'#000', insetColor:'#000', backgroundColor:'#666'}, btn"
+                style="border:2px solid #272727; padding-left:6px; padding-right:7px; padding-top:0px; padding-bottom:0px">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+              </button>
+
+              <script>
+                function allcolorupdate(jscolor) {
+                  // 'jscolor' instance can be used as a string
+                  $('.allstyle').css('backgroundColor', '#' + jscolor)
                 }
+              </script>
 
-                <% @lightbulbs.where.not("room_id" => nil).each do |lightbulb| %>
-                put(<%= find_id(lightbulb.control_id) %>, $(this).prop('checked'), r<%= lightbulb.id %>.getValue());
-                <% end %>
+              <!-- RoomControllerBox brightness -->
+              &nbsp&nbsp&nbsp
+              <input type="text" style="width: 91%" data-slider-min="1" data-slider-max="254" data-slider-step="1" data-slider-value="254" id="allfooter"/>
 
-
+              <!-- RoomControllerBox brightness script -->
+              <script>
                 <% @rooms.each do |room| %>
-                if ($(this).prop('checked')) {
-                  $('#room' + <%= room.id %>).bootstrapToggle('on')
+                  <% room.lightbulbs.where.not("room_id" => nil).each do |lightbulb| %>
+                    var RGBChange<%= room.id %><%= lightbulb.id %> = function() {
+                      $('.lightbulbstyle<%= lightbulb.id %>').css('opacity', rall<%= room.id %><%= lightbulb.id %>.getValue()/254)
+                      if ($('#room' + <%= room.id %>).prop('checked')) {
+                        $('.roomstyle<%= room.id %>').css({"background-color": "rgba(204,119,51," + rall<%= room.id %><%= lightbulb.id %>.getValue()/254 + ")", "transition":"background-color 0.0s"});
+                      }
+                      if ($('#all').prop('checked')) {
+                        $('.allstyle').css({"background-color": "rgba(204,119,51," + rall<%= room.id %><%= lightbulb.id %>.getValue()/254 + ")", "transition":"background-color 0.0s"});
+                      }
+                      $('#lightbulbfooter<%= lightbulb.id %>').slider('setValue',rall<%= room.id %><%= lightbulb.id %>.getValue())
+                      $('#roomfooter<%= room.id %>').slider('setValue',rall<%= room.id %><%= lightbulb.id %>.getValue())
+                      $.ajax({
+                        url: 'http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + <%= find_id(lightbulb.control_id) %> + '/state',
+                        type: 'PUT',
+                        dataType: 'json',
+                        data: '{"bri": ' + rall<%= room.id %><%= lightbulb.id %>.getValue() +'}' // or $('#myform').serializeArray()
+                      })
+                    };
 
-                } else {
-                  $('#room' + <%= room.id %>).bootstrapToggle('off')
-
-                }
+                    var rall<%= room.id %><%= lightbulb.id %> = $('#allfooter').slider({
+                      formatter: function(value) {
+                        return  (value/254*100).toFixed(0) + "%";
+                      },
+                      tooltip_position: "bottom"
+                    })
+                    .on('change', RGBChange<%= room.id %><%= lightbulb.id %>)
+                    .data('slider');
+                  <% end %>
                 <% end %>
+              </script>
 
-                if ($(this).prop('checked')) {
-                  $('.allstyle').css({"background-color":"rgba(204,119,51," + $('#allfooter').slider('getValue')/254 + ")", "transition":"background-color 0.5s ease"});
-                } else {
-                  $('.allstyle').css({"background-color":"", "transition":"background-color 0.5s ease"});
-                }
-
-              })
-            })
-            </script>
-          </div>
-
-          <div class="clearfix"></div>
-          <div style="padding-top:8px">
-
-
-            <input type="text" style="width: 100%" data-slider-min="1" data-slider-max="254" data-slider-step="1" data-slider-value="254" id="allfooter" />
-
-
-          </div>
-
-          <script>
-          <% @rooms.each do |room| %>
-          <% room.lightbulbs.where.not("room_id" => nil).each do |lightbulb| %>
-          var RGBChange<%= room.id %><%= lightbulb.id %> = function() {
-            $('.lightbulbstyle<%= lightbulb.id %>').css('opacity', rall<%= room.id %><%= lightbulb.id %>.getValue()/254)
-            if ($('#room' + <%= room.id %>).prop('checked')) {
-              $('.roomstyle<%= room.id %>').css({"background-color": "rgba(204,119,51," + rall<%= room.id %><%= lightbulb.id %>.getValue()/254 + ")", "transition":"background-color 0.0s"});
-            }
-            if ($('#all').prop('checked')) {
-              $('.allstyle').css({"background-color": "rgba(204,119,51," + rall<%= room.id %><%= lightbulb.id %>.getValue()/254 + ")", "transition":"background-color 0.0s"});
-            }
-            $('#lightbulbfooter<%= lightbulb.id %>').slider('setValue',rall<%= room.id %><%= lightbulb.id %>.getValue())
-            $('#roomfooter<%= room.id %>').slider('setValue',rall<%= room.id %><%= lightbulb.id %>.getValue())
-            $.ajax({
-              url: 'http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + <%= find_id(lightbulb.control_id) %> + '/state',
-              type: 'PUT',
-              dataType: 'json',
-              data: '{"bri": ' + rall<%= room.id %><%= lightbulb.id %>.getValue() +'}' // or $('#myform').serializeArray()
-            })
-          };
-
-
-          var rall<%= room.id %><%= lightbulb.id %> = $('#allfooter').slider({
-            formatter: function(value) {
-              return  (value/254*100).toFixed(0) + "%";
-            },
-            tooltip_position: "bottom"
-          })
-          .on('change', RGBChange<%= room.id %><%= lightbulb.id %>)
-          .data('slider');
-
+            </div>
           <% end %>
-          <% end %>
-
-
-
-          </script>
         </div>
-        <div class="panel-body allstyle">
-
-          <!-- <a href="/test_all">Test</a> -->
-
-        </div>
+        <div class="panel-body allstyle"></div>
       </div>
     </div>
-    <h3>
-
-    </h3>
   </div>
-
-
 </div>
 
+<!-- Row-Horizon -->
 <div class="row row-horizon">
 
+  <!-- UnassignedBox -->
   <% if @lightbulbs.count(:room_id) != @lightbulbs.count %>
-  <div class="col-md-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Unassigned</h3>
-      </div>
-      <div class="panel-body">
-
-
-        <% @lightbulbs.each do |lightbulb| %>
-        <% if lightbulb.room_id == nil %>
-
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title"><a href="/lightbulbs/<%= lightbulb.id %>/edit"><%= lightbulb.name %></a></h3>
-          </div>
-          <div class="panel-body">
-            <form action="/update_lightbulb/<%= lightbulb.id %>" method="post">
-
-              <!-- Hidden input for authenticity token to protect from forgery -->
-              <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
-
-              <!-- Label and input for user_id -->
-              <input type="hidden" name="user_id" value="<%= lightbulb.user_id %>">
-
-              <!-- Label and input for state_id -->
-              <input type="hidden" name="state_id" value="<%= lightbulb.state_id %>">
-
-              <!-- Label and input for control_id -->
-              <input type="hidden" name="control_id" value="<%= lightbulb.control_id %>">
-
-              <!-- Label and input for name -->
-              <input type="hidden" name="name" value="<%= lightbulb.name %>">
-
-              <%= select_tag(:room_id, options_from_collection_for_select(Room.where("user_id = ?", current_user.id).order("lower(name) ASC").all, :id, :name, lightbulb.room_id), :class => "form-control ", :onchange => "this.form.submit();", :include_blank => true, :size => 1) %>
-
-            </form>
-
-          </div>
-          <div class="panel-footer" style="padding-top: 4px;padding-bottom: 4px;" >
-            <div class="pull-right">
-              <a href="/delete_lightbulb/<%= lightbulb.id %>" style="color: white;"><span class="glyphicon glyphicon-remove" style="font-size: 70%;" aria-hidden="true"></span></a>
-            </div>
-            <div class="clearfix"></div>
-          </div>
-
-
-        </div>
-
-        <% end %>
-        <% end %>
-
-      </div>
-      <div class="panel-footer" style="padding-top: 4px;padding-bottom: 4px;" >
-        <div class="pull-right">
-          <a href="/delete_unassigned" style="color: white;">Delete all unassigned</a>
-        </div>
-        <div class="clearfix"></div>
-      </div>
-    </div>
-  </div>
-  <% end %>
-
-
-  <%  @rooms.each do |room| %>
-
-  <div class="col-md-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title pull-left"><a href="/rooms/<%= room.id %>/edit"><%= room.name %></a></h3>
-
-        <div class="pull-right">
-          <span id="toggle_wrapper"><input id="room<%= room.id %>" type="checkbox" data-toggle="toggle" data-style="ios" data-size="mini" data-width="70"
-            <% if room.lightbulbs.all? {|lightbulb| JSON.parse(open('http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + find_id(lightbulb.control_id)).read)["state"]["on"]} %>
-            checked
-            <% end %>
-            ></span>
-
-            <script>
-
-            $(function() {
-              $('#room<%= room.id %>').change(function() {
-
-
-
-                function put(control_id, state) {
-                  $.ajax({
-                    url: 'http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + control_id + '/state',
-                    type: 'PUT',
-                    dataType: 'json',
-                    data: '{"on": ' + state +'}' // or $('#myform').serializeArray()
-                  });
-                }
-
-                <% lightbulbs = room.lightbulbs %>
-
-                <% lightbulbs.each do |lightbulb| %>
-                if ($(this).prop('checked')) {
-                  $('#lightbulb' + <%= lightbulb.id %>).bootstrapToggle('on')
-                } else {
-                  $('#lightbulb' + <%= lightbulb.id %>).bootstrapToggle('off')
-                }
-                <% end %>
-
-
-                if ($(this).prop('checked')) {
-                  $('.roomstyle<%= room.id %>').css({"background-color":"rgba(204,119,51," + $('#roomfooter<%= room.id %>').slider('getValue')/254 + ")", "transition":"background-color 0.5s ease"});
-                } else {
-                  $('.roomstyle<%= room.id %>').css({"background-color":"", "transition":"background-color 0.5s ease"});
-                }
-
-
-              })
-            })
-            </script>
+    <div class="col-md-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title pull-left">Unassigned</h3>
+          <div class="pull-right">
+            <a href="/delete_unassigned" style="color: white;"><span class="glyphicon glyphicon-remove" style="font-size: 70%;" aria-hidden="true"></span></a>
           </div>
           <div class="clearfix"></div>
-          <div style="padding-top:8px">
-
-
-            <input type="text" style="width: 100%" data-slider-min="1" data-slider-max="254" data-slider-step="1" data-slider-value="254" id="roomfooter<%= room.id %>" />
-
-
-          </div>
-
-          <script>
-
-
-
-          <% room.lightbulbs.each do |lightbulb| %>
-          var RGBChange<%= room.id %><%= lightbulb.id %> = function() {
-            $('.lightbulbstyle<%= lightbulb.id %>').css('opacity', r<%= room.id %><%= lightbulb.id %>.getValue()/254)
-            if ($('#room' + <%= room.id %>).prop('checked')) {
-              $('.roomstyle<%= room.id %>').css({"background-color": "rgba(204,119,51," + r<%= room.id %><%= lightbulb.id %>.getValue()/254 + ")", "transition":"background-color 0.0s"});
-            }
-            $('#roomfooter<%= room.id %>').slider('setValue',r<%= room.id %><%= lightbulb.id %>.getValue())
-            $('#lightbulbfooter<%= lightbulb.id %>').slider('setValue',r<%= room.id %><%= lightbulb.id %>.getValue())
-            $.ajax({
-              url: 'http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + <%= find_id(lightbulb.control_id) %> + '/state',
-              type: 'PUT',
-              dataType: 'json',
-              data: '{"bri": ' + r<%= room.id %><%= lightbulb.id %>.getValue() +'}' // or $('#myform').serializeArray()
-            })
-          };
-
-
-
-
-
-          var r<%= room.id %><%= lightbulb.id %> = $('#roomfooter<%= room.id %>').slider({
-            formatter: function(value) {
-              return  (value/254*100).toFixed(0) + "%";
-            },
-            tooltip_position: "bottom"
-          })
-          .on('change', RGBChange<%= room.id %><%= lightbulb.id %>)
-          .data('slider');
-
-          <% end %>
-
-
-
-          </script>
         </div>
+        <div class="panel-body">
 
-        <div class="panel-body roomstyle<%= room.id %>">
 
-          <!-- <a href="/test_room/<%= room.id %>">Test</a> -->
-
-          <br/>
-
-          <% lightbulbs = room.lightbulbs.order("lower(name) ASC") %>
-          <% lightbulbs.each do |lightbulb| %>
+          <% @lightbulbs.each do |lightbulb| %>
+          <% if lightbulb.room_id == nil %>
 
           <div class="panel panel-default">
             <div class="panel-heading">
               <h3 class="panel-title pull-left"><a href="/lightbulbs/<%= lightbulb.id %>/edit"><%= lightbulb.name %></a></h3>
               <div class="pull-right">
+                <a href="/delete_lightbulb/<%= lightbulb.id %>" style="color: white;"><span class="glyphicon glyphicon-remove" style="font-size: 70%;" aria-hidden="true"></span></a>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+              <form action="/update_lightbulb/<%= lightbulb.id %>" method="post">
 
+                <!-- Hidden input for authenticity token to protect from forgery -->
+                <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+                <!-- Label and input for user_id -->
+                <input type="hidden" name="user_id" value="<%= lightbulb.user_id %>">
+
+                <!-- Label and input for state_id -->
+                <input type="hidden" name="state_id" value="<%= lightbulb.state_id %>">
+
+                <!-- Label and input for control_id -->
+                <input type="hidden" name="control_id" value="<%= lightbulb.control_id %>">
+
+                <!-- Label and input for name -->
+                <input type="hidden" name="name" value="<%= lightbulb.name %>">
+
+                <%= select_tag(:room_id, options_from_collection_for_select(Room.where("user_id = ?", current_user.id).order("lower(name) ASC").all, :id, :name, lightbulb.room_id), :class => "form-control ", :onchange => "this.form.submit();", :include_blank => true, :size => 1) %>
+
+              </form>
+
+            </div>
+
+          </div>
+
+          <% end %>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- RoomBoxes -->
+  <%  @rooms.each do |room| %>
+  <div class="col-md-3">
+    <div class="panel panel-default">
+
+      <!-- RoomBox heading -->
+      <div class="panel-heading">
+        <h3 class="panel-title pull-left"><a href="/rooms/<%= room.id %>/edit"><%= room.name %></a></h3>
+
+        <% if room.lightbulbs.count > 0 %>
+          <div class="pull-right">
+
+            <!-- RoomBox button -->
+            <input id="room<%= room.id %>" type="checkbox" data-toggle="toggle" data-style="ios" data-size="mini" data-width="70"
+            <% if room.lightbulbs.all? {|lightbulb| JSON.parse(open('http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + find_id(lightbulb.control_id)).read)["state"]["on"]} %>
+            checked
+            <% end %>
+            >
+
+            <!-- RoomBox button script -->
+            <script>
+              $(function() {
+                $('#room<%= room.id %>').change(function() {
+
+                  function put(control_id, state) {
+                    $.ajax({
+                      url: 'http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + control_id + '/state',
+                      type: 'PUT',
+                      dataType: 'json',
+                      data: '{"on": ' + state +'}' // or $('#myform').serializeArray()
+                    });
+                  }
+
+                  <% lightbulbs = room.lightbulbs %>
+
+                  <% lightbulbs.each do |lightbulb| %>
+                  if ($(this).prop('checked')) {
+                    $('#lightbulb' + <%= lightbulb.id %>).bootstrapToggle('on')
+                  } else {
+                    $('#lightbulb' + <%= lightbulb.id %>).bootstrapToggle('off')
+                  }
+                  <% end %>
+
+                  if ($(this).prop('checked')) {
+                    $('.roomstyle<%= room.id %>').css({"background-color":"rgba(204,119,51," + $('#roomfooter<%= room.id %>').slider('getValue')/254 + ")", "transition":"background-color 0.5s ease"});
+                  } else {
+                    $('.roomstyle<%= room.id %>').css({"background-color":"", "transition":"background-color 0.5s ease"});
+                  }
+
+                })
+              })
+            </script>
+
+          </div>
+
+        <% end %>
+        <div class="clearfix"></div>
+        <% if room.lightbulbs.count > 0 %>
+
+
+          <div style="padding-top:8px">
+            <!-- RoomBox color -->
+            <button
+            class="jscolor {valueElement:null,value:'cc7733', width: 240, height:30, padding:0, shadow:false, borderWidth:0, onFineChange:'room<%= room.id %>colorupdate(this)', borderColor:'#000', insetColor:'#000', backgroundColor:'#666'}, btn"
+              style="border:2px solid #272727; padding-left:6px; padding-right:7px; padding-top:0px; padding-bottom:0px">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            </button>
+
+            <script>
+              function room<%= room.id %>colorupdate(jscolor) {
+                $('.roomstyle<%= room.id %>').css({"background-color":
+                  "rgba(" + Math.round(jscolor.rgb[0]) + "," + Math.round(jscolor.rgb[1]) + "," + Math.round(jscolor.rgb[2]) + "," + r<%= room.id %>.getValue()/254 + ")"
+                  , "transition":"background-color 0.0s"});
+              }
+            </script>
+
+            <!-- RoomBox brightness -->
+            &nbsp&nbsp&nbsp
+            <input type="text" style="width: 81%" data-slider-min="1" data-slider-max="254" data-slider-step="1" data-slider-value="254" id="roomfooter<%= room.id %>" />
+          </div>
+
+          <!-- RoomBox slider script -->
+          <script>
+
+            <% room.lightbulbs.each do |lightbulb| %>
+            var RGBChange<%= room.id %><%= lightbulb.id %> = function() {
+              $('.lightbulbstyle<%= lightbulb.id %>').css('opacity', r<%= room.id %><%= lightbulb.id %>.getValue()/254)
+              if ($('#room' + <%= room.id %>).prop('checked')) {
+                $('.roomstyle<%= room.id %>').css({"background-color": "rgba(204,119,51," + r<%= room.id %><%= lightbulb.id %>.getValue()/254 + ")", "transition":"background-color 0.0s"});
+              }
+              $('#roomfooter<%= room.id %>').slider('setValue',r<%= room.id %><%= lightbulb.id %>.getValue())
+              $('#lightbulbfooter<%= lightbulb.id %>').slider('setValue',r<%= room.id %><%= lightbulb.id %>.getValue())
+              $.ajax({
+                url: 'http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + <%= find_id(lightbulb.control_id) %> + '/state',
+                type: 'PUT',
+                dataType: 'json',
+                data: '{"bri": ' + r<%= room.id %><%= lightbulb.id %>.getValue() +'}' // or $('#myform').serializeArray()
+              })
+            };
+
+            var r<%= room.id %><%= lightbulb.id %> = $('#roomfooter<%= room.id %>').slider({
+              formatter: function(value) {
+                return  (value/254*100).toFixed(0) + "%";
+              },
+              tooltip_position: "bottom"
+            })
+            .on('change', RGBChange<%= room.id %><%= lightbulb.id %>)
+            .data('slider');
+
+            <% end %>
+
+            var r<%= room.id %> = $('#roomfooter<%= room.id %>').slider({
+              formatter: function(value) {
+                return  (value/254*100).toFixed(0) + "%";
+              },
+              tooltip_position: "bottom"
+            })
+            .data('slider');
+
+          </script>
+        <% end %>
+
+      </div>
+
+      <!-- RoomBox body -->
+      <div class="panel-body roomstyle<%= room.id %>">
+
+        <br/>
+
+        <!-- LightbulbBoxes -->
+        <% lightbulbs = room.lightbulbs.order("lower(name) ASC") %>
+        <% lightbulbs.each do |lightbulb| %>
+
+          <div class="panel panel-default">
+
+            <!-- LightbulbBox heading -->
+            <div class="panel-heading">
+              <h3 class="panel-title pull-left"><a href="/lightbulbs/<%= lightbulb.id %>/edit"><%= lightbulb.name %></a></h3>
+              <div class="pull-right">
+
+                <!-- LightbulbBox button -->
                 <input id="lightbulb<%= lightbulb.id %>" type="checkbox" data-toggle="toggle" data-style="ios" data-size="mini" data-width="70"
                 <% if JSON.parse(open('http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + find_id(lightbulb.control_id)).read)["state"]["on"] %>
                 checked
                 <% end %>
                 >
 
+                <!-- LightbulbBox button script -->
                 <script>
-                $(function() {
-                  $('#lightbulb<%= lightbulb.id %>').change(function() {
-                    $.ajax({
-                      url: 'http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + <%= find_id(lightbulb.control_id) %> + '/state',
-                      type: 'PUT',
-                      dataType: 'json',
+                  $(function() {
+                    $('#lightbulb<%= lightbulb.id %>').change(function() {
+                      $.ajax({
+                        url: 'http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + <%= find_id(lightbulb.control_id) %> + '/state',
+                        type: 'PUT',
+                        dataType: 'json',
 
-                      data: '{"on": ' + $(this).prop('checked') +',"bri": ' + r<%= lightbulb.id %>.getValue() + '}' // or $('#myform').serializeArray()
-                    });
-                    if ($(this).prop('checked')) {
-                      $('.lightbulbstyle<%= lightbulb.id %>').css({"background-color":"#cc7733", "transition":"background-color 0.5s ease"});
-                    } else {
-                      $('.lightbulbstyle<%= lightbulb.id %>').css({"background-color":"", "transition":"background-color 0.5s ease"});
-                    }
+                        data: '{"on": ' + $(this).prop('checked') +',"bri": ' + r<%= lightbulb.id %>.getValue() + '}' // or $('#myform').serializeArray()
+                      });
+                      if ($(this).prop('checked')) {
+                        $('.lightbulbstyle<%= lightbulb.id %>').css({"background-color":"#cc7733", "transition":"background-color 0.5s ease"});
+                      } else {
+                        $('.lightbulbstyle<%= lightbulb.id %>').css({"background-color":"", "transition":"background-color 0.5s ease"});
+                      }
+                    })
                   })
-                })
                 </script>
+
               </div>
               <div class="clearfix"></div>
+
               <div style="padding-top:8px">
+                <!-- LightbulbBox color -->
+                <button
+                  class="jscolor {valueElement:null,value:'cc7733', width: 240, height:30, padding:0, shadow:false, borderWidth:0, onFineChange:'lightbulb<%= lightbulb.id %>colorupdate(this)', borderColor:'#000', insetColor:'#000', backgroundColor:'#666'}, btn"
+                  style="border:2px solid #272727; padding-left:6px; padding-right:7px; padding-top:0px; padding-bottom:0px">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                </button>
 
-        <input type="text" style="width: 100%" data-slider-min="1" data-slider-max="254" data-slider-step="1" data-slider-value="<%= JSON.parse(open('http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + find_id(lightbulb.control_id)).read)["state"]["bri"] %>" id="lightbulbfooter<%= lightbulb.id %>" />
+                <script>
+                  function lightbulb<%= lightbulb.id %>colorupdate(jscolor) {
+                    // 'jscolor' instance can be used as a string
+                    $('.lightbulbstyle<%= lightbulb.id %>').css('backgroundColor', '#' + jscolor)
+                  }
+                </script>
 
+                <!-- LightbulbBox brightness -->
+                &nbsp&nbsp&nbsp
+                <input type="text" style="width: 79%" data-slider-min="1" data-slider-tooltip="hide" data-slider-max="254" data-slider-step="1" data-slider-value="<%= JSON.parse(open('http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + find_id(lightbulb.control_id)).read)["state"]["bri"] %>" id="lightbulbfooter<%= lightbulb.id %>" />
+              </div>
 
+              <!-- LightbulbBox slider script -->
+              <script>
 
+                var RGBChange<%= lightbulb.id %> = function() {
+                  $('.lightbulbstyle<%= lightbulb.id %>').css('opacity', r<%= lightbulb.id %>.getValue()/254)
+                  $.ajax({
+                    url: 'http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + <%= find_id(lightbulb.control_id) %> + '/state',
+                    type: 'PUT',
+                    dataType: 'json',
+                    data: '{"bri": ' + r<%= lightbulb.id %>.getValue() +'}' // or $('#myform').serializeArray()
+                  })
+                };
+
+                var r<%= lightbulb.id %> = $('#lightbulbfooter<%= lightbulb.id %>').slider({
+                  formatter: function(value) {
+                    return  (value/254*100).toFixed(0) + "%";
+                  },
+                  tooltip_position: "bottom"
+                })
+                .on('change', RGBChange<%= lightbulb.id %>)
+                .data('slider');
+
+              </script>
+
+            </div>
+
+            <!-- LightbulbBox body -->
+            <div class="panel-body lightbulbstyle<%= lightbulb.id %>">
+              <!-- <a href="/lightbulbs/<%= lightbulb.control_id %>/test">Test</a> -->
+            </div>
+
+          </div>
+
+        <% end %>
 
       </div>
 
-
-
-      <script>
-      var RGBChange<%= lightbulb.id %> = function() {
-        $('.lightbulbstyle<%= lightbulb.id %>').css('opacity', r<%= lightbulb.id %>.getValue()/254)
-        $.ajax({
-          url: 'http://192.168.1.6/api/2c52addb187cad2f12b4c8e33012b2b7/lights/' + <%= find_id(lightbulb.control_id) %> + '/state',
-          type: 'PUT',
-          dataType: 'json',
-          data: '{"bri": ' + r<%= lightbulb.id %>.getValue() +'}' // or $('#myform').serializeArray()
-        })
-      };
-
-      var r<%= lightbulb.id %> = $('#lightbulbfooter<%= lightbulb.id %>').slider({
-        formatter: function(value) {
-          return  (value/254*100).toFixed(0) + "%";
-        },
-        tooltip_position: "bottom"
-      })
-      .on('change', RGBChange<%= lightbulb.id %>)
-      .data('slider');
-
-
-      </script>
-    </div>
-    <div class="panel-body lightbulbstyle<%= lightbulb.id %>">
-      <!-- <a href="/lightbulbs/<%= lightbulb.control_id %>/test">Test</a> -->
+      <!-- RoomBox footer -->
+      <div class="panel-footer" style="padding-top: 4px;padding-bottom: 4px;" >
+        <div class="pull-right">
+          <a href="/delete_room/<%= room.id %>" style="color: white;"><span class="glyphicon glyphicon-remove" style="font-size: 70%;" aria-hidden="true"></span></a>
+        </div>
+        <div class="clearfix"></div>
+      </div>
 
     </div>
-
   </div>
-
   <% end %>
 
-</div>
-<div class="panel-footer" style="padding-top: 4px;padding-bottom: 4px;" >
-  <div class="pull-right">
-    <a href="/delete_room/<%= room.id %>" style="color: white;"><span class="glyphicon glyphicon-remove" style="font-size: 70%;" aria-hidden="true"></span></a>
-  </div>
-  <div class="clearfix"></div>
-</div>
+  <!-- Add new room -->
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Add New Room</h3>
+      </div>
+      <div class="panel-body">
 
-</div>
-</div>
+        <form action="/create_room" method="post">
 
-<% end %>
+          <!-- Hidden input for authenticity token to protect from forgery -->
+          <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
 
-<div class="col-md-3">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Add New Room</h3>
-    </div>
-    <div class="panel-body">
+          <!-- Label and input for user_id -->
+          <input type="hidden" name="user_id" value="<%= current_user.id %> %>">
 
-      <form action="/create_room" method="post">
+          <!-- Label and input for name -->
+          <div class="form-group">
+            <label for="name" class="control-label">
+              Name
+            </label>
 
-        <!-- Hidden input for authenticity token to protect from forgery -->
-        <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+            <input type="text" id="name" name="name" placeholder="Name" class="form-control">
+          </div>
 
-        <!-- Label and input for user_id -->
-        <input type="hidden" name="user_id" value="<%= current_user.id %> %>">
+          <button class="btn btn-success btn-group-justified">
+            Create Room
+          </button>
+        </form>
 
-        <!-- Label and input for name -->
-        <div class="form-group">
-          <label for="name" class="control-label">
-            Name
-          </label>
-
-          <input type="text" id="name" name="name" placeholder="Name" class="form-control">
-        </div>
-
-        <button class="btn btn-success btn-group-justified">
-          Create Room
-        </button>
-      </form>
-
+      </div>
     </div>
   </div>
-</div>
 
 </div>
 
 <script>
 
+  <% @lightbulbs.where.not("room_id" => nil).each do |lightbulb| %>
+  if ($('#lightbulb' + <%= lightbulb.id %>).prop('checked')) {
+    $('.lightbulbstyle<%= lightbulb.id %>').css({"background-color":"#cc7733"});
+  } else {
+    $('.lightbulbstyle<%= lightbulb.id %>').css({"background-color":""});
+  }
+  $('.lightbulbstyle<%= lightbulb.id %>').css('opacity', r<%= lightbulb.id %>.getValue()/254);
+  <% end %>
 
-<% @lightbulbs.where.not("room_id" => nil).each do |lightbulb| %>
-if ($('#lightbulb' + <%= lightbulb.id %>).prop('checked')) {
-  $('.lightbulbstyle<%= lightbulb.id %>').css({"background-color":"#cc7733"});
-} else {
-  $('.lightbulbstyle<%= lightbulb.id %>').css({"background-color":""});
-}
-$('.lightbulbstyle<%= lightbulb.id %>').css('opacity', r<%= lightbulb.id %>.getValue()/254);
-<% end %>
+  <% @rooms.each do |room| %>
 
-<% @rooms.each do |room| %>
+  var sum = 0.0;
+  <% room.lightbulbs.each do |lightbulb| %>
+  sum += r<%= lightbulb.id %>.getValue();
+  <% end %>
+  var average = sum/<%= room.lightbulbs.count %>;
 
-var sum = 0.0;
-<% room.lightbulbs.each do |lightbulb| %>
-sum += r<%= lightbulb.id %>.getValue();
-<% end %>
-var average = sum/<%= room.lightbulbs.count %>;
+  if ($('#room' + <%= room.id %>).prop('checked')) {
+    $('.roomstyle<%= room.id %>').css('background-color', "rgba(204,119,51," + average/254 + ")");
+  }
+  $('#roomfooter<%= room.id %>').slider('setValue',average)
 
-if ($('#room' + <%= room.id %>).prop('checked')) {
-  $('.roomstyle<%= room.id %>').css('background-color', "rgba(204,119,51," + average/254 + ")");
-}
-$('#roomfooter<%= room.id %>').slider('setValue',average)
+  <% end %>
 
-<% end %>
+  var sum = 0.0;
 
-var sum = 0.0;
+  <% @rooms.each do |room| %>
+  <% room.lightbulbs.each do |lightbulb| %>
+  sum += r<%= lightbulb.id %>.getValue();
+  <% end %>
+  <% end %>
+  var average = sum/<%= @lightbulbs.count(:room_id) %>;
 
-<% @rooms.each do |room| %>
-<% room.lightbulbs.each do |lightbulb| %>
-sum += r<%= lightbulb.id %>.getValue();
-<% end %>
-<% end %>
-var average = sum/<%= @lightbulbs.count(:room_id) %>;
-
-
-if ($('#all').prop('checked')) {
-  $('.allstyle').css('background-color', "rgba(204,119,51," + average/254 + ")");
-
-}
-$('#allfooter').slider('setValue',average)
-
+  if ($('#all').prop('checked')) {
+    $('.allstyle').css('background-color', "rgba(204,119,51," + average/254 + ")");
+  }
+  $('#allfooter').slider('setValue',average)
 
 </script>
+
+<!--
+<script>
+
+  var x = x; // the given x value
+  var y = y; // the given y value
+  var z = 1.0 - x - y;
+  var Y = brightness; // The given brightness value
+  var X = (Y / y) * x;
+  var Z = (Y / y) * z;
+
+  var r =  X * 1.656492 - Y * 0.354851 - Z * 0.255038;
+  var g = -X * 0.707196 + Y * 1.655397 + Z * 0.036152;
+  var b =  X * 0.051713 - Y * 0.121364 + Z * 1.011530;
+
+  if (r <= 0.0031308)
+    12.92 * r : (1.0 + 0.055);
+  else {
+    pow(r, (1.0 / 2.4)) - 0.055;
+  }
+
+  if (g <= 0.0031308)
+    12.92 * g : (1.0 + 0.055);
+  else {
+    pow(g, (1.0 / 2.4)) - 0.055;
+  }
+
+  if (b <= 0.0031308)
+    12.92 * b : (1.0 + 0.055);
+  else {
+    pow(b, (1.0 / 2.4)) - 0.055;
+  }
+
+</script> -->

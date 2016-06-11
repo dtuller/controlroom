@@ -4,6 +4,7 @@ gem "starter_generators", :git => "http://github.com/raghubetina/starter_generat
 gem 'devise'
 gem 'bootstrap_colorpicker_rails'
 gem "bootstrap-switch-rails"
+gem 'jscolor-rails'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
