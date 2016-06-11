@@ -14,6 +14,7 @@
 <% end %>
 <% end %>
 
+
 <!-- RoomControllerBox -->
 <div class="page-header">
   <div class="row">
@@ -23,34 +24,7 @@
 
           <!-- Scene selection button -->
           <div class="btn-group pull-left">
-            <% if @scene.present? %>
-              <a class="btn btn-primary" href="/scenes/<%= @scene.id %>/edit"> <%= @scene.name %></a>
-              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="caret"></span>
-                <span class="sr-only">Toggle Dropdown</span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a href="/">Room Controller</a></li>
-                <li role="separator" class="divider"></li>
-                <% @scenes.each do |scene| %>
-                <li><a href="/scenes/<%= scene.id %>"><%= scene.name %></a></li>
-                <% end %>
-                <li role="separator" class="divider"></li>
-                <li><a href="/scenes/new">New Scene</a></li>
-              </ul>
-            <% else %>
-              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Room Controller &nbsp&nbsp<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
-              </button>
-              <ul class="dropdown-menu">
-                <% if @scenes.present? %>
-                  <% @scenes.each do |scene| %>
-                    <li><a href="/scenes/<%= scene.id %>"><%= scene.name %></a></li>
-                  <% end %>
-                <li role="separator" class="divider"></li>
-                <% end %>
-                <li><a href="/scenes/new">New Scene</a></li>
-              </ul>
-            <% end %>
+            <h2 class="panel-title">All Lightbulbs</h3>
           </div>
 
           <!-- RoomControllerBox button -->
