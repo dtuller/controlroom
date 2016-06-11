@@ -541,37 +541,3 @@
   $('#allfooter').slider('setValue',average)
 
 </script>
-
-<!--
-<script>
-
-  var x = x; // the given x value
-  var y = y; // the given y value
-  var z = 1.0 - x - y;
-  var Y = brightness; // The given brightness value
-  var X = (Y / y) * x;
-  var Z = (Y / y) * z;
-
-  var r =  X * 1.656492 - Y * 0.354851 - Z * 0.255038;
-  var g = -X * 0.707196 + Y * 1.655397 + Z * 0.036152;
-  var b =  X * 0.051713 - Y * 0.121364 + Z * 1.011530;
-
-  if (r <= 0.0031308)
-    12.92 * r : (1.0 + 0.055);
-  else {
-    pow(r, (1.0 / 2.4)) - 0.055;
-  }
-
-  if (g <= 0.0031308)
-    12.92 * g : (1.0 + 0.055);
-  else {
-    pow(g, (1.0 / 2.4)) - 0.055;
-  }
-
-  if (b <= 0.0031308)
-    12.92 * b : (1.0 + 0.055);
-  else {
-    pow(b, (1.0 / 2.4)) - 0.055;
-  }
-
-</script> -->
